@@ -158,7 +158,7 @@ function visualiser_instance_carre(clients,usines,x,y)
 
     for i in 1:length(clients)
         for j in 1:length(usines)
-            if x[i,j] > 0.5
+            if x[i,j] > 0.1
                 plot!(p, [clients[i][1], usines[j][1]], [clients[i][2], usines[j][2]],
                 color=:green, label=false)
             end

@@ -1,5 +1,3 @@
-using JuMP, Gurobi
-
 function localisation_simple(N,M,c,f)
     m = Model(Gurobi.Optimizer)
     set_silent(m)

@@ -1,5 +1,3 @@
-using JuMP, Gurobi
-
 function localisation_simple_relache(N,M,c,f)
     m = Model(Gurobi.Optimizer)
     set_silent(m)
@@ -27,6 +25,8 @@ end
 
 function arrondi(les_indices)
     affecte = [false for i = 1:N]
+    x_final = [0 for i = 1:N, j = 1:M]
+    y_final = [0 for j = 1:M]
 
     C = 0
     for i in les_indices
@@ -56,12 +56,14 @@ function arrondi(les_indices)
 
             # Calculer le coût du cluster C_k
             C = C + best_usine_cost
+            y[best_usine] = 1
             for iprime in cluster
                 C = C + D[iprime,best_usine]
-                println("Client $iprime assigné au cluster $best_usine")
+                x[iprime, best_usine] = 1
+                # println("Client $iprime assigné au cluster $best_usine")
             end
         end
     end
 
-    return C
+    return x,y,C
 end
