@@ -6,14 +6,14 @@ function primal_dual(N,M,D,f)
     y = [0 for j = 1:M]
 
     affecte = [0 for i = 1:N]
+    nb_affecte = 0
 
     # Phase 1 : itérer tant qu'il reste des clients non affectés
-    while sum(affecte[i] for i = 1:N) < N
-
+    while nb_affecte < N
         # Vérifier si le budget v d'un client a atteint le coût d'un site ouvert
         for i = 1:N
             for j = 1:M
-                if y[j] == 1 && v[i] == D[i,j]
+                if y[j] == 1 && v[i] >= D[i,j]
                     x[i,j] = 1
                     affecte[i] = 1
                 end
@@ -22,7 +22,7 @@ function primal_dual(N,M,D,f)
 
         # Vérifier s'il y a assez de surplus w pour ouvrir un site
         for j = 1:M
-            if sum(w[i,j] for i = 1:N) == f[j]
+            if sum(w[i,j] for i = 1:N) >= f[j]
                 y[j] = 1
                 for i = 1:N
                     if affecte[i] == 0 && v[i] >= D[i,j]
@@ -42,6 +42,8 @@ function primal_dual(N,M,D,f)
                 end
             end
         end
+
+        nb_affecte = sum(affecte[i] for i = 1:N)
     end
 
     # Phase 2

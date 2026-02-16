@@ -23,10 +23,11 @@ function localisation_simple_relache(N,M,c,f)
     return value(x), value(y), v, objective_value(m)
 end
 
-function arrondi(les_indices)
+function arrondi(N,M,c,f,x,y,v)
     affecte = [false for i = 1:N]
     x_final = [0 for i = 1:N, j = 1:M]
     y_final = [0 for j = 1:M]
+    les_indices = sortperm(v)
 
     C = 0
     for i in les_indices
@@ -56,14 +57,14 @@ function arrondi(les_indices)
 
             # Calculer le coût du cluster C_k
             C = C + best_usine_cost
-            y[best_usine] = 1
+            y_final[best_usine] = 1
             for iprime in cluster
-                C = C + D[iprime,best_usine]
-                x[iprime, best_usine] = 1
+                C = C + c[iprime,best_usine]
+                x_final[iprime, best_usine] = 1
                 # println("Client $iprime assigné au cluster $best_usine")
             end
         end
     end
 
-    return x,y,C
+    return x_final,y_final,C
 end

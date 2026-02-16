@@ -8,7 +8,7 @@ Génère une instance de problème de localisation sur une grille triangulaire (
 - N : Nombre de clients
 - M : Nombre d'usines
 """
-function generer_instance_hexagone(L::Int, N::Int, M::Int)
+function generer_instance_hexagone(L::Int, N::Int, M::Int, same::Bool = false)
     # 1. Générer tous les points valides de la grille dans l'hexagone
     # Pour un hexagone de côté L, les coordonnées varient de -(L-1) à L-1
     range_val = L - 1
@@ -16,20 +16,29 @@ function generer_instance_hexagone(L::Int, N::Int, M::Int)
     clients = []
     usines = []
 
-    for _ in 1:N
-        q = rand(-range_val:range_val)
-        r = rand(max(-range_val, -q - range_val):min(range_val, -q + range_val))
-        s = -q-r
-        push!(clients, (q,r,s))
-    end
-    
-    for _ in 1:M
-        q = rand(-range_val:range_val)
-        r = rand(max(-range_val, -q - range_val):min(range_val, -q + range_val))
-        s = -q-r
-        push!(usines, (q,r,s))
-    end
+    if same
+        for _ in 1:N
+            q = rand(-range_val:range_val)
+            r = rand(max(-range_val, -q - range_val):min(range_val, -q + range_val))
+            s = -q-r
+            push!(clients, (q,r,s))
+            push!(usines, (q,r,s))
+        end
+    else
+        for _ in 1:N
+            q = rand(-range_val:range_val)
+            r = rand(max(-range_val, -q - range_val):min(range_val, -q + range_val))
+            s = -q-r
+            push!(clients, (q,r,s))
+        end
         
+        for _ in 1:M
+            q = rand(-range_val:range_val)
+            r = rand(max(-range_val, -q - range_val):min(range_val, -q + range_val))
+            s = -q-r
+            push!(usines, (q,r,s))
+        end
+    end
 
     # 3. Calcul de la matrice de distances D[i, j]
     # La distance de Manhattan sur une grille hexagonale/triangulaire est :
@@ -100,16 +109,26 @@ end
 """
 Affiche la grille hexagonale, les clients et les usines.
 """
-function visualiser_instance_hexagone(clients, usines)
-    # 1. Générer TOUS les points de la grille pour le fond
-
+function visualiser_instance_hexagone(clients, usines, x, y)
     # 2. Extraire les positions des clients
     cx = [cube_to_cartesian(c...)[1] for c in clients]
     cy = [cube_to_cartesian(c...)[2] for c in clients]
 
     # 3. Extraire les positions des usines
-    ux = [cube_to_cartesian(u...)[1] for u in usines]
-    uy = [cube_to_cartesian(u...)[2] for u in usines]
+    ux_open = []
+    uy_open = []
+    ux_closed = []
+    uy_closed = []
+
+    for j in 1:length(usines)
+        if y[j] > 0.5
+            push!(ux_open,cube_to_cartesian(usines[j]...)[1])
+            push!(uy_open,cube_to_cartesian(usines[j]...)[2])
+        else
+            push!(ux_closed,cube_to_cartesian(usines[j]...)[1])
+            push!(uy_closed,cube_to_cartesian(usines[j]...)[2])
+        end
+    end
 
     # --- Création du tracé ---
     p = scatter()
@@ -117,13 +136,25 @@ function visualiser_instance_hexagone(clients, usines)
     scatter!(p, cx, cy, 
         label="Clients (N=$(length(clients)))", color=:blue, markersize=6, marker=:circle)
 
-    scatter!(p, ux, uy, 
-        label="Usines (M=$(length(usines)))", color=:red, markersize=8, marker=:rect)
+    scatter!(p, ux_open, uy_open, 
+        label="Usines ouvertes", color=:red, markersize=8, marker=:rect)
+    
+    scatter!(p, ux_closed, uy_closed, 
+        label="Usines fermées", color=:grey, markersize=8, marker=:rect)
+
+    for i in 1:length(clients)
+        for j in 1:length(usines)
+            if x[i,j] > 0.1
+                plot!(p, [cube_to_cartesian(clients[i]...)[1], cube_to_cartesian(usines[j]...)[1]], [cube_to_cartesian(clients[i]...)[2], cube_to_cartesian(usines[j]...)[2]],
+                color=:green, label=false)
+            end
+        end
+    end
 
     return p
 end
 
-function visualiser_instance_carre(clients,usines,x,y)
+function visualiser_instance_carre(clients, usines, x, y)
     # 2. Extraire les positions des clients
     cx = [c[1] for c in clients]
     cy = [c[2] for c in clients]
