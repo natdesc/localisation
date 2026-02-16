@@ -21,7 +21,10 @@ function localisation_simple(N,M,c,f)
     optimize!(m)
 
     # display(value(x))
-    display(value(y))
+    # display(value(y))
 
+    println("Valeur objectif du problème intégral :")
     display(objective_value(m))
+
+    return value(x),value(y),objective_value(m)
 end
