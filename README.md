@@ -3,12 +3,12 @@
 Scripts pour cours MLA du MPRO 2025-26
 
 `generer_instance.jl` : génère des instances de localisation simple avec :
-    - **L** : taille d'un côté de la grille
-    - **N** : nombre de clients
-    - **M** : nombre d'usines/sites
+    * **L** : taille d'un côté de la grille
+    * **N** : nombre de clients
+    * **M** : nombre d'usines/sites
     ==> génère les matrices de distances entre chaque couple client-usine
 
-Deux types d'instances : carrés de côté **L**, hexagones réguliers de côté **L** avec grille triangulaire.
+Deux types d'instances : carrés de côté **L** ("CAR"), hexagones réguliers de côté **L** avec grille triangulaire ("HEX").
 
 + scripts pour visualiser les instances sur un diagramme 2D.
 
