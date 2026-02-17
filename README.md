@@ -66,3 +66,13 @@ Deux types d'instances : carrés de côté **L**, hexagones réguliers de côté
 | inst_38 | "HEX" | 160 | 50 | 25 | 2089.0 | 2089.0 | 2089 | 2295 |
 | inst_39 | "HEX" | 180 | 50 | 25 | 2317.0 | 2317.0 | 2317 | 2625 |
 | inst_40 | "HEX" | 200 | 50 | 25 | 2408.0 | 2408.0 | 2408 | 2534 |
+
+# Exemple d'une (rare) instance où la solution relâchée est différente de l'optimal :
+
+cf. `instances/inst_27`
+
+![image](instances/inst_27/resultat_exact.png)
+
+![image](instances/inst_27/resultat_relache.png)
+
+![image](instances/inst_27/resultat_arrondi.png)
